@@ -13,8 +13,10 @@ logging.basicConfig(level=logging.INFO,
                     format='(%(threadName)-9s) %(message)s',)
 random.seed(999)
 
+
 def doing_something():
     time.sleep(1)
+
 
 class Variable(object):
     def __init__(self, value=None):
@@ -44,16 +46,17 @@ class Producer(Thread):
         super().__init__(*args, **kargs)
         self.variable = variable
         self.condition = condition
-        self.start()
-    
+
     def run(self):
         while True:
             doing_something()
             with self.condition:
-                self.condition.wait_for(self.variable.is_none) # wait until variable is none
+                # wait until variable is none
+                self.condition.wait_for(self.variable.is_none)
                 value = random.randint(0, 100)
                 self.variable.set_value(value)
-                logging.info(threading.current_thread().name + ' produces value ' + str(value))
+                logging.info(threading.current_thread().name +
+                             ' produces value ' + str(value))
                 self.condition.notify_all()
 
 
@@ -62,36 +65,39 @@ class Consumer(Thread):
         super().__init__(*args, **kargs)
         self.variable = variable
         self.condition = condition
-        self.start()
-    
+
     def run(self):
         while True:
             doing_something()
             with self.condition:
-                self.condition.wait_for(self.variable.is_not_none) # wait until variable is not none
+                # wait until variable is not none
+                self.condition.wait_for(self.variable.is_not_none)
                 value = self.variable.get_value()
-                logging.info(threading.current_thread().name + ' consumes value ' + str(value))
-                self.condition.notify_all() 
+                logging.info(threading.current_thread().name +
+                             ' consumes value ' + str(value))
+                self.condition.notify_all()
 
 
 def main():
     variable = Variable()
     condition = Condition()
+    processes = []
 
-    p1 = Producer(variable, condition, name='Producer1')
-    p2 = Producer(variable, condition, name='Producer2')
-    # p3 = Producer(variable, condition, name='Producer3')
-    c1 = Consumer(variable, condition, name='Consumer1')
-    c2 = Consumer(variable, condition, name='Consumer2')
-    c3 = Consumer(variable, condition, name='Consumer3')
+    processes.append(Producer(variable, condition, name='Producer1'))
+    processes.append(Producer(variable, condition, name='Producer2'))
+    # processes.append(Producer(variable, condition, name='Producer3'))
+    processes.append(Consumer(variable, condition, name='Consumer1'))
+    processes.append(Consumer(variable, condition, name='Consumer2'))
+    processes.append(Consumer(variable, condition, name='Consumer3'))
 
-    p1.join()
-    p2.join()
-    # p3.join()
-    c1.join()
-    c2.join()
-    c3.join()
-    
+    try:
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+    except KeyboardInterrupt as e:
+        print(e)
+
     print(variable)
 
 

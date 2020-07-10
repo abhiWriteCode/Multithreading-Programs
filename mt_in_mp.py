@@ -22,7 +22,7 @@ class MultiThread(td.Thread):
         self.t_queue = queue
         # self.lock = lock
         self.start()
-    
+
     def run(self):
         while True:
             doing_something(T=2)
@@ -36,10 +36,12 @@ class MultiThread(td.Thread):
 def start(queue, n_thread=1):
     logging.info(mp.current_process().name)
 
-    threads = [MultiThread(queue, name=f'MultiThread{i+1}') for i in range(n_thread)]
+    threads = [MultiThread(
+        queue, name=f'MultiThread{i+1}') for i in range(n_thread)]
 
     for t in threads:
         t.join()
+
 
 if __name__ == "__main__":
     print(__doc__)
@@ -51,8 +53,8 @@ if __name__ == "__main__":
     n_thread = 5
 
     try:
-        processes = [mp.Process(target=start, 
-                                name=f'MultiProcess{i+1}', 
+        processes = [mp.Process(target=start,
+                                name=f'MultiProcess{i+1}',
                                 args=(queue, n_thread)) for i in range(n_process)]
 
         for p in processes:
@@ -60,7 +62,7 @@ if __name__ == "__main__":
 
         for p in processes:
             p.join()
-            
+
     except KeyboardInterrupt:
         for p in processes:
             p.terminate()

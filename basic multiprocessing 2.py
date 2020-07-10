@@ -21,7 +21,8 @@ def process_task(x, lock):
 
 def main():
     my_list = [1, 2, 3, 4]
-    x = mps.Array('i', my_list)  # x = mps.Value('i', 0) and to get value use, x.value
+    # x = mps.Value('i', 0) and to get value use, x.value
+    x = mps.Array('i', my_list)
 
     lock = mps.Lock()
 

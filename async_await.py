@@ -17,7 +17,7 @@ def sync_method():
 	global n	
 	logging.info('sync_method running')
 
-	threads = [threading.Thread(target=sync_request, name='request ' + str(i), args=()) \
+	threads = [threading.Thread(target=sync_request, name=f'request {i}', args=()) \
 												for i in range(1, n + 1)]
 
 	for t in threads:

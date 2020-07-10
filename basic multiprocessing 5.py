@@ -58,8 +58,10 @@ def main():
 
     start_time = time()
 
-    p1 = Process(target=operation_with_race_condition, name='increment', args=(num, True))
-    p2 = Process(target=operation_with_race_condition, name='decrement', args=(num, False))
+    p1 = Process(target=operation_with_race_condition,
+                 name='increment', args=(num, True))
+    p2 = Process(target=operation_with_race_condition,
+                 name='decrement', args=(num, False))
 
     p1.start()
     p2.start()
@@ -70,15 +72,16 @@ def main():
     print('After', num)
     print('Time required: {:.6f}'.format(time() - start_time))
 
-
     num = Number(0)
     print('\nInitial', num)
 
     start_time = time()
     lock = Lock()
 
-    p1 = Process(target=operation_without_race_condition, name='increment', args=(num, lock, True))
-    p2 = Process(target=operation_without_race_condition, name='decrement', args=(num, lock, False))
+    p1 = Process(target=operation_without_race_condition,
+                 name='increment', args=(num, lock, True))
+    p2 = Process(target=operation_without_race_condition,
+                 name='decrement', args=(num, lock, False))
 
     p1.start()
     p2.start()

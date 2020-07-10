@@ -18,14 +18,15 @@ class Producer(Thread):
         self.array = array
         self.condition = condition
         self.start()
-    
+
     def run(self):
         while True:
             time.sleep(1)
             with self.condition:
-                logging.info(threading.current_thread().name + ' produces value')
+                logging.info(threading.current_thread().name +
+                             ' produces value')
                 self.array.append(True)
-                self.condition.notify_all() # self.condition.notify(n=2)
+                self.condition.notify_all()  # self.condition.notify(n=2)
 
 
 class Consumer(Thread):
@@ -34,12 +35,14 @@ class Consumer(Thread):
         self.array = array
         self.condition = condition
         self.start()
-    
+
     def run(self):
         while True:
             with self.condition:
-                self.condition.wait_for(lambda: len(self.array) > 0) # wait until length_of_array > 0
-                logging.info(threading.current_thread().name + ' consumes value')
+                # wait until length_of_array > 0
+                self.condition.wait_for(lambda: len(self.array) > 0)
+                logging.info(threading.current_thread().name +
+                             ' consumes value')
                 self.array.pop(0)
 
 
@@ -56,7 +59,7 @@ def main():
     c1.join()
     c2.join()
     # c3.join()
-    
+
     print(len(array))
 
 

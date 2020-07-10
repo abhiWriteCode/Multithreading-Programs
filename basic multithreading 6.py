@@ -16,7 +16,7 @@ class Producer(Process):
         super().__init__(*args, **kargs)
         self.queue = q
         self.start()
-    
+
     def run(self):
         while True:
             time.sleep(2)
@@ -29,7 +29,7 @@ class Consumer(Process):
         super().__init__(*args, **kargs)
         self.queue = q
         self.start()
-    
+
     def run(self):
         while True:
             logging.info('consumer consumes value')
